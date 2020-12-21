@@ -29,12 +29,25 @@
 (define (eval-lambda machine expr) ((machine 'eval) expr))
 (define (show-bindings machine) (machine 'show))
 
-(define c (calculus))
+(define (def? expr) (and (pair? expr) (eq? (car expr) 'define)))
+(define (command? expr) (and (pair? expr) (eq? (car expr) 'command)))
 
-(begin
-    (displayln (bind-val c 'a 2))
-    (displayln (bind-val c 'b 3))
-    (displayln (bind-val c 'b 3))
-    (displayln (show-bindings c))
-    (displayln (eval-lambda c '((lambda (x) (x b)) c)))
-)
+(define (repl)
+    (let ((machine (calculus)))
+        (define (dispatch expr)
+            (cond ((def? expr)
+                    (bind-val machine (cadr expr) (caddr expr)))
+                  ((command? expr)
+                    (let ((cmd (cadr expr)))
+                        (cond ((eq? cmd 'show) (show-bindings machine))
+                              (else 'unknown-command))))
+                  (else (eval-lambda machine expr))))
+        (define (loop)
+            (begin
+                (display "> ")
+                (define a (read))
+                (displayln (dispatch a))
+                (loop)))
+        (loop)))
+
+(repl)

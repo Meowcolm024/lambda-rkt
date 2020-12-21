@@ -8,8 +8,6 @@ lambda calculus written in racket.
 % racket main.rkt
 ```
 
-## notice
+## issues
 
-something still not working :(
-
-the replacing strategy is buggy X_X
+`sub` is not working

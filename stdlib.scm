@@ -4,15 +4,15 @@
 (define plus (lambda (m) (lambda (n) (lambda (f) (lambda (x) ((n f) ((m f) x)))))))
 (define mult (lambda (m) (lambda (n) (lambda (f) (m (n f))))))
 (define pred (lambda (n) (lambda (f) (lambda (x) (((n (lambda (g) (lambda (h) (h (g f))))) (lambda (u) x)) (lambda (u) u))))))
-(define sub (lambda (m) (lambda (n) ((n pred) m))))
 (define if id)
 (define true (lambda (x) (lambda (y) x)))
 (define false (lambda (x) (lambda (y) y)))
 (define and (lambda (p) (lambda (q) ((p q) p))))
 (define or (lambda (p) (lambda (q) ((p q) q))))
 (define not (lambda (p) (lambda (a) (lambda (b) ((p b) a)))))
-;; not working?
-(define iszero (lambda (n) ((n (lambda (z) false)) true)))
+(define iszero (lambda (n) ((n (lambda (x) false)) true)))
 ;; extend
 (define one (succ zero))
 (define two (succ one))
+;; not working
+(define sub (lambda (m) (lambda (n) ((n pred) m))))

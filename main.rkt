@@ -11,11 +11,6 @@
             result
             (evaluate result))))
 
-(define (lambda? expr)
-    (if (pair? expr)
-        (eq? (car expr) 'lambda)
-        #f))
-
 (define (eval-expr expr)
     (cond ((lambda? expr) (handle-lambda expr))
           ((pair? expr) (handle-term expr))
@@ -42,6 +37,7 @@
                     result)
                 result))))
 
+;; handle beta
 (define (find-vars expr)
     (cond ((lambda? expr) (cons (car (cadr expr)) (find-vars (caddr expr))))
           ((pair? expr) (append (find-vars (car expr)) (find-vars (cadr expr))))
@@ -65,6 +61,11 @@
             (cdr vals))))
 
 ;; helper functions
+(define (lambda? expr)
+    (if (pair? expr)
+        (eq? (car expr) 'lambda)
+        #f))
+
 (define (intersection a b)
   (if (null? a)
       '()
@@ -86,6 +87,23 @@
                             (if (member x common) (quote-append x '_) x))
                          list-b)))))
 
-(displayln (evaluate
-    '(((lambda (p) (lambda (q) ((p q) p))) (lambda (x) (lambda (y) x))) (lambda (x) (lambda (y) y)))
-))
+;; tests
+(begin
+    ;; and false true
+    (displayln (evaluate
+        '(
+            (
+                (lambda (p) (lambda (q) ((p q) p)))
+                (lambda (x) (lambda (y) x))
+            ) 
+            (lambda (x) (lambda (y) y))
+        )
+    ))
+    ;; succ zero
+    (displayln (evaluate
+        '(
+            (lambda (n) (lambda (f) (lambda (x) (f ((n f) x)))))
+            (lambda (f) (lambda (x) x))
+        )
+    ))
+)

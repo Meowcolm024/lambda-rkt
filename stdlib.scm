@@ -11,8 +11,8 @@
 (define and (lambda (p) (lambda (q) ((p q) p))))
 (define or (lambda (p) (lambda (q) ((p q) q))))
 (define not (lambda (p) (lambda (a) (lambda (b) ((p b) a)))))
-;; not working
-(define iszero (lambda (n) ((n (lambda (x) false)) true)))
+;; not working?
+(define iszero (lambda (n) ((n (lambda (z) false)) true)))
 ;; extend
 (define one (succ zero))
 (define two (succ one))

@@ -33,11 +33,8 @@
               (lam-vars (cadr (car expr)))
               (lam-body (caddr (car expr)))
               (body (cadr expr)))
-             (let ((common (intersection left-vars right-vars)))
-                (if (null? common)
-                    (replace lam-body (car lam-vars) body)
-                    (error "not implemented")
-                 )))
+             (let ((mod-body (handle-dup left-vars right-vars)))
+                  (replace lam-body (car lam-vars) (replace-vars body right-vars mod-body))))
         (let ((result (map eval-expr expr)))
             (if (pair? result)
                 (if (lambda? (car result))
@@ -82,7 +79,7 @@
 (define (handle-dup list-a list-b)
     (let ((common (intersection list-a list-b)))
             (if (null? common)
-                (list list-a list-b)
+                list-b
                 (handle-dup 
                     list-a 
                     (map (lambda (x) 
@@ -90,5 +87,5 @@
                          list-b)))))
 
 (displayln (evaluate
-    '((lambda (p) (lambda (a) (lambda (b) ((p b) a)))) (lambda (x) (lambda (y) x)))
+    '(((lambda (p) (lambda (q) ((p q) p))) (lambda (x) (lambda (y) x))) (lambda (x) (lambda (y) y)))
 ))
